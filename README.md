@@ -105,5 +105,4 @@ This project is licensed under the [MIT License](LICENSE).
 **Devangi Inani**
 [GitHub: @devangi2004](https://github.com/devangi2004)
 
-If you upload a screenshot of your form, I can generate a GitHub-optimized preview link for it.
-```
+
