@@ -24,11 +24,14 @@ It includes real-time validation, elegant UI design, and dynamic feedback for us
 
 ## 🧩 Project Structure
 Contact-Form---Beginner/
-├──public
-   └── index.html
-├── package-lock.json
-├── package.json
-└── server.js
+│
+├── public/
+│ └── index.html # Main frontend file
+│
+├── package-lock.json # Dependency lock file
+├── package.json # Project metadata and dependencies
+└── server.js # Express server handling routes and submissions
+
 ---
 
 ## 🎯 Purpose
