@@ -1,0 +1,13 @@
+{
+  "name": "beginner-task-2",
+  "version": "1.0.0",
+  "description": "Inline styles, client-side validation, and server-side validation demo",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}

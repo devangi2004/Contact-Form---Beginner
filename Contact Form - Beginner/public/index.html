@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Beginner Task 2 - Form</title>
+
+    <style>
+      :root {
+        --bg: #0b1020;
+        --card: #121a35;
+        --muted: #9fb3c8;
+        --accent: #6ea8fe;
+        --danger: #ff6b6b;
+        --success: #2ecc71;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+        background: radial-gradient(1200px 600px at 10% 0%, #0e1635, #050914),
+          var(--bg);
+        color: #e6eef7;
+      }
+
+      .container {
+        max-width: 720px;
+        margin: 48px auto;
+        padding: 0 16px;
+      }
+
+      .card {
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0));
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        backdrop-filter: blur(6px);
+        border-radius: 14px;
+        padding: 24px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+      }
+
+      h1 {
+        margin-top: 0;
+        font-size: 28px;
+        letter-spacing: 0.2px;
+      }
+
+      p.desc {
+        color: var(--muted);
+        margin-top: 6px;
+      }
+
+      form {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+
+      label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 6px;
+      }
+
+      input[type="text"],
+      input[type="email"],
+      input[type="number"],
+      textarea {
+        width: 100%;
+        background: #0a1126;
+        color: #e6eef7;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        padding: 12px 14px;
+        outline: none;
+        transition: border-color 120ms ease, box-shadow 120ms ease;
+      }
+
+      input:focus,
+      textarea:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(110, 168, 254, 0.15);
+      }
+
+      .error {
+        color: var(--danger);
+        font-size: 12px;
+        margin-top: 6px;
+        min-height: 16px;
+      }
+
+      .actions {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+
+      button {
+        background: linear-gradient(180deg, #7ab0ff, #5e96f0);
+        color: #0b1020;
+        border: none;
+        border-radius: 10px;
+        padding: 12px 16px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: transform 120ms ease, filter 120ms ease;
+      }
+
+      button:hover {
+        transform: translateY(-1px);
+        filter: brightness(1.05);
+      }
+
+      .note {
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .status {
+        margin-top: 8px;
+        font-size: 14px;
+      }
+
+      .ok {
+        color: var(--success);
+      }
+
+      .fail {
+        color: var(--danger);
+      }
+
+      .list {
+        margin-top: 24px;
+        border-top: 1px dashed rgba(255, 255, 255, 0.15);
+        padding-top: 16px;
+      }
+
+      .chip {
+        display: inline-block;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 999px;
+        padding: 6px 10px;
+        margin: 4px 6px 0 0;
+        font-size: 12px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="card">
+        <h1>Contact Form</h1>
+        <p class="desc">
+          All fields are required. Client-side validation runs before sending.
+          Server also validates and stores temporarily.
+        </p>
+
+        <form id="contactForm" novalidate>
+          <div class="field">
+            <label for="name">Name</label>
+            <input id="name" name="name" type="text" placeholder="Jane Doe" />
+            <div class="error" id="err-name"></div>
+          </div>
+
+          <div class="field">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" placeholder="jane@example.com" />
+            <div class="error" id="err-email"></div>
+          </div>
+
+          <div class="field">
+            <label for="age">Age</label>
+            <input id="age" name="age" type="number" min="13" max="120" placeholder="28" />
+            <div class="error" id="err-age"></div>
+          </div>
+
+          <div class="field">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" rows="4" placeholder="Say hello... (10-500 chars)"></textarea>
+            <div class="error" id="err-message"></div>
+          </div>
+
+          <div class="actions">
+            <button type="submit">Send</button>
+            <span class="note">Tip: Try invalid inputs to see errors.</span>
+          </div>
+
+          <div id="status" class="status"></div>
+        </form>
+
+        <div class="list" id="recent"></div>
+      </div>
+    </div>
+
+    <script>
+      const form = document.getElementById("contactForm");
+      const statusEl = document.getElementById("status");
+      const recentEl = document.getElementById("recent");
+
+      function setError(id, msg) {
+        const el = document.getElementById("err-" + id);
+        if (el) el.textContent = msg || "";
+      }
+
+      function clearErrors() {
+        ["name", "email", "age", "message"].forEach((f) => setError(f, ""));
+      }
+
+      function isValidEmail(email) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email).trim());
+      }
+
+      function validate() {
+        clearErrors();
+        let ok = true;
+
+        const name = form.name.value.trim();
+        const email = form.email.value.trim();
+        const age = form.age.value;
+        const message = form.message.value.trim();
+
+        if (!name) {
+          setError("name", "Name is required.");
+          ok = false;
+        } else if (name.length < 2) {
+          setError("name", "Name must be at least 2 characters.");
+          ok = false;
+        }
+
+        if (!email) {
+          setError("email", "Email is required.");
+          ok = false;
+        } else if (!isValidEmail(email)) {
+          setError("email", "Please provide a valid email address.");
+          ok = false;
+        }
+
+        if (age === "" || age === null) {
+          setError("age", "Age is required.");
+          ok = false;
+        } else if (!Number.isFinite(Number(age)) || Number(age) % 1 !== 0) {
+          setError("age", "Age must be an integer.");
+          ok = false;
+        } else if (Number(age) < 13 || Number(age) > 120) {
+          setError("age", "Age must be between 13 and 120.");
+          ok = false;
+        }
+
+        if (!message) {
+          setError("message", "Message is required.");
+          ok = false;
+        } else if (message.length < 10) {
+          setError("message", "Message must be at least 10 characters.");
+          ok = false;
+        } else if (message.length > 500) {
+          setError("message", "Message must be fewer than 500 characters.");
+          ok = false;
+        }
+
+        return ok;
+      }
+
+      async function refreshList() {
+        try {
+          const res = await fetch("/submissions");
+          const json = await res.json();
+
+          if (!json.ok) return;
+
+          const items = json.data.slice(-5).reverse();
+          if (items.length === 0) {
+            recentEl.innerHTML = "";
+            return;
+          }
+
+          recentEl.innerHTML =
+            '<div style="margin-bottom:8px;color:#9fb3c8;">Recent submissions (last 5)</div>' +
+            items
+              .map(
+                (s) =>
+                  `<span class="chip">#${s.id} ${s.name} · ${s.email} · ${s.age}</span>`
+              )
+              .join("");
+        } catch {}
+      }
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        statusEl.textContent = "";
+        statusEl.className = "status";
+
+        if (!validate()) {
+          statusEl.textContent = "Fix the errors above and try again.";
+          statusEl.classList.add("fail");
+          return;
+        }
+
+        const payload = {
+          name: form.name.value.trim(),
+          email: form.email.value.trim(),
+          age: form.age.value,
+          message: form.message.value.trim(),
+        };
+
+        try {
+          const res = await fetch("/submit", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+
+          const json = await res.json();
+
+          if (!res.ok || !json.ok) {
+            if (json && json.errors) {
+              Object.entries(json.errors).forEach(([k, v]) => setError(k, v));
+            }
+            statusEl.textContent = "Submission failed. Please review errors.";
+            statusEl.classList.add("fail");
+            return;
+          }
+
+          form.reset();
+          statusEl.textContent = "Submitted successfully!";
+          statusEl.classList.add("ok");
+          await refreshList();
+        } catch (err) {
+          statusEl.textContent = "Network error. Please try again.";
+          statusEl.classList.add("fail");
+        }
+      });
+
+      refreshList();
+    </script>
+  </body>
+</html>
