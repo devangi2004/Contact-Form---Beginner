@@ -81,7 +81,7 @@ This project was built as a **beginner-level full-stack exercise** to strengthen
 
 A clean and interactive contact form that validates user input before submission.
 
-(<img width="1901" height="921" alt="Image" src="https://github.com/user-attachments/assets/3f5da217-b632-48d1-93bd-0dfcb14b21ca" />)
+<img width="1901" height="921" alt="Image" src="https://github.com/user-attachments/assets/3f5da217-b632-48d1-93bd-0dfcb14b21ca" />
 
 ---
 
