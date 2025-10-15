@@ -81,7 +81,7 @@ This project was built as a **beginner-level full-stack exercise** to strengthen
 
 A clean and interactive contact form that validates user input before submission.
 
-![Contact Form Preview](https://via.placeholder.com/800x400?text=Contact+Form+Preview)
+![Contact Form Preview](<img width="1901" height="921" alt="Image" src="https://github.com/user-attachments/assets/3f5da217-b632-48d1-93bd-0dfcb14b21ca" />)
 
 ---
 
